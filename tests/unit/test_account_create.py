@@ -23,12 +23,12 @@ class TestAccount:
 
     def test_no_valid_promo_code(self):
         account = Account("John", "Doe", "98309201942", "PROM_AB1")
-        assert account.balance == 50
+        assert account.balance == 0
 
     def test_no_invalid_promo_code_prefix(self):
         account = Account("John", "Doe", "98309201942", "PROMO_AB1")
-        assert account.balance == 0
+        assert account.balance == 50
 
     def test_no_valid_promo_code_suffix(self):
         account = Account("John", "Doe", "98309201942", "PROM_ABg1")
-        assert account.balance == 50
+        assert account.balance == 0
