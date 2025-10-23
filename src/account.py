@@ -57,3 +57,22 @@ class Account:
             year = 1900 + year_digits
 
         return year > 1960
+
+    def __register_transfer(self, amount):
+        self.balance += amount
+        return True
+
+    def try_register_incoming_transfer(self, amount):
+        if amount <= 0:
+            return False
+
+        return self.__register_transfer(amount)
+
+
+    def try_register_outgoing_transfer(self, amount):
+        if amount <= 0:
+            return False
+        if amount > self.balance:
+            return False
+
+        return self.__register_transfer(-amount)
