@@ -1,7 +1,7 @@
 from src.account import Account
 
 
-class TestAccount:
+class TestTransfer:
     def test_outgoing_transfer_zero(self):
         account = Account("John", "Doe", "98309201942")
         balance = 100
