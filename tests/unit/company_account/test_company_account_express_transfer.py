@@ -48,4 +48,4 @@ class TestCompanyExpressTransfer:
         transfer_amount = 75000
         account.balance = balance
         assert account.try_register_outgoing_express_transfer(transfer_amount) == True
-        assert account.balance == balance - transfer_amount - 1
+        assert account.balance == balance - transfer_amount - transfer_fee
