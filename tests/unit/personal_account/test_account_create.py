@@ -61,3 +61,13 @@ class TestAccount:
     def test_promo_code_person_born_in_2000_gets_bonus(self):
         account = PersonalAccount("Emily", "Gray", "00222312345", "PROMO_ABC")
         assert account.balance == 50
+
+    def test_is_born_after_1960_for_1800s(self):
+        pesel_1850 = "50810112345"
+        account = PersonalAccount("John", "Doe", pesel_1850)
+        assert account.is_born_after_1960(pesel_1850) == False
+
+    def test_is_born_after_1960_for_late_1800s(self):
+        pesel_1899 = "99923112345"
+        account = PersonalAccount("Jane", "Doe", pesel_1899)
+        assert account.is_born_after_1960(pesel_1899) == False
