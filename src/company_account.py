@@ -14,3 +14,16 @@ class CompanyAccount(Account):
         if len(nip) != 10:
             return False
         return True
+
+    def __register_express_transfer(self, amount):
+        express_transfer_fee = 5
+        self._register_express__transfer(amount - express_transfer_fee)
+        return True
+
+    def try_register_outgoing_express_transfer(self, amount):
+        if amount <= 0:
+            return False
+        if amount > self.balance:
+            return False
+
+        return self.__register_express_transfer(-amount)

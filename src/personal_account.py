@@ -58,3 +58,17 @@ class PersonalAccount(Account):
             year = 1900 + year_digits
 
         return year > 1960
+
+
+    def __register_express_transfer(self, amount):
+        express_transfer_fee = 1
+        self._register_express__transfer(amount - express_transfer_fee)
+        return True
+
+    def try_register_outgoing_express_transfer(self, amount):
+        if amount <= 0:
+            return False
+        if amount > self.balance:
+            return False
+
+        return self.__register_express_transfer(-amount)
