@@ -62,7 +62,10 @@ class PersonalAccount(Account):
 
     def __register_express_transfer(self, amount):
         express_transfer_fee = 1
-        self._register_express__transfer(amount - express_transfer_fee)
+        self.history.append(amount)
+        self.balance += amount
+        self.history.append(-express_transfer_fee)
+        self.balance -= express_transfer_fee
         return True
 
     def try_register_outgoing_express_transfer(self, amount):
