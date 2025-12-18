@@ -30,3 +30,25 @@ class CompanyAccount(Account):
             return False
 
         return self.__register_express_transfer(-amount)
+
+    def _has_zus_payment(self):
+        return -1775 in self.history
+
+    def is_loan_allowed(self, amount):
+        if amount <= 0:
+            return False
+
+        if self.balance < 2 * amount:
+            return False
+
+        if not self._has_zus_payment():
+            return False
+
+        return True
+
+    def take_loan(self, amount):
+        if not self.is_loan_allowed(amount):
+            return False
+
+        self.balance += amount
+        return True
