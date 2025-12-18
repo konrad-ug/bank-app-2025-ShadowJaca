@@ -104,6 +104,50 @@ def delete_account(pesel):
     return jsonify({"message": "Account deleted"}), 200
 
 
+@app.route("/api/accounts/<pesel>/transfer", methods=["POST"])
+def register_transfer(pesel: str):
+    acc = registry.get_by_pesel(pesel)
+    if acc is None:
+        return jsonify({"error": "Account not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    if not {"amount", "type"}.issubset(data.keys()):
+        return jsonify({"error": "Missing required fields: amount, type"}), 400
+
+    amount = data.get("amount")
+    ttype = data.get("type")
+
+    # Walidacja amount
+    try:
+        amount = float(amount)
+    except Exception:
+        return jsonify({"error": "Field 'amount' must be a number"}), 400
+    if amount <= 0:
+        return jsonify({"error": "Field 'amount' must be > 0"}), 400
+
+    if ttype not in {"incoming", "outgoing", "express"}:
+        return jsonify({"error": "Unknown transfer type"}), 400
+
+    ok = False
+    if ttype == "incoming":
+        ok = acc.try_register_incoming_transfer(amount)
+        if not ok:
+            return jsonify({"error": "Transfer failed"}), 400
+    elif ttype == "outgoing":
+        ok = acc.try_register_outgoing_transfer(amount)
+        if not ok:
+            return jsonify({"error": "Transfer could not be processed"}), 422
+    elif ttype == "express":
+        method = getattr(acc, "try_register_outgoing_express_transfer", None)
+        if method is None:
+            return jsonify({"error": "Express transfer not supported"}), 400
+        ok = method(amount)
+        if not ok:
+            return jsonify({"error": "Transfer could not be processed"}), 422
+
+    return jsonify({"message": "Zlecenie przyjęto do realizacji"}), 200
+
+
 if __name__ == "__main__":
     # Lokalny start (np. `python app\api.py`) – przy testach korzystamy z `flask --app ... run`
     app.run(debug=True)
