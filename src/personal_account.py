@@ -75,3 +75,22 @@ class PersonalAccount(Account):
             return False
 
         return self.__register_express_transfer(-amount)
+
+    def is_loan_allowed(self, amount):
+        if amount <= 0:
+            return False
+
+        if len(self.history) >= 3 and all(op > 0 for op in self.history[-3:]):
+            return True
+
+        if len(self.history) >= 5 and sum(self.history[-5:]) > amount:
+            return True
+
+        return False
+
+    def submit_for_loan(self, amount):
+        if not self.is_loan_allowed(amount):
+            return False
+
+        self.balance += amount
+        return True
