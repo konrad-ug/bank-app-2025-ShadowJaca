@@ -2,10 +2,12 @@ from flask import Flask, request, jsonify
 
 from src.accounts_registry import AccountsRegistry
 from src.personal_account import PersonalAccount
+from src.mongo_accounts_repository import MongoAccountsRepository
 
 
 app = Flask(__name__)
 registry = AccountsRegistry()
+repository = MongoAccountsRepository()
 
 
 def serialize_account(acc: PersonalAccount) -> dict:
@@ -146,6 +148,30 @@ def register_transfer(pesel: str):
             return jsonify({"error": "Transfer could not be processed"}), 422
 
     return jsonify({"message": "Zlecenie przyjęto do realizacji"}), 200
+
+
+@app.route("/api/accounts/save", methods=["POST"])
+def save_accounts():
+    accounts = registry.list_all()
+    repository.save_all(accounts)
+    return jsonify({"message": "Accounts saved"}), 200
+
+
+@app.route("/api/accounts/load", methods=["POST"])
+def load_accounts():
+    accounts = repository.load_all()
+    registry.clear()
+    for acc in accounts:
+        registry.add_personal_account(
+            acc.first_name,
+            acc.last_name,
+            acc.pesel
+        )
+        new_acc = registry.get_by_pesel(acc.pesel)
+        if new_acc:
+            new_acc.balance = acc.balance
+            new_acc.history = acc.history
+    return jsonify({"message": "Accounts loaded"}), 200
 
 
 if __name__ == "__main__":

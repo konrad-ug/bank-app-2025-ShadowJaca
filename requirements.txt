@@ -3,3 +3,5 @@ coverage==6.5.0
 Flask==2.2.5
 requests==2.32.3
 Werkzeug==2.2.3
+pymongo
+pytest-mock
