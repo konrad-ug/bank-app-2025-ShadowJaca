@@ -1,5 +1,5 @@
 import pytest
-
+from unittest.mock import patch
 from src.company_account import CompanyAccount
 
 
@@ -7,7 +7,9 @@ class TestCompanyExpressTransfer:
 
     @pytest.fixture(autouse=True, scope="function")
     def setup_method(self):
-        self.account = CompanyAccount("Tech Corp", "1234567890")
+        with patch("src.company_account.CompanyAccount.validate_nip_mf") as mock_validate:
+            mock_validate.return_value = True
+            self.account = CompanyAccount("Tech Corp", "1234567890")
 
 
 
