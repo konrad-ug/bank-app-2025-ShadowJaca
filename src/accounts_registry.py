@@ -64,3 +64,8 @@ class AccountsRegistry:
             del self._id_by_pesel[pesel]
 
         return True
+
+    def clear(self) -> None:
+        self._next_id = 1
+        self._by_id = {}
+        self._id_by_pesel = {}

@@ -79,6 +79,26 @@ class PersonalAccount(Account):
 
         return self.__register_express_transfer(-amount)
 
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "pesel": self.pesel,
+            "balance": self.balance,
+            "history": self.history
+        }
+
+    @staticmethod
+    def from_dict(data):
+        account = PersonalAccount(
+            data["first_name"],
+            data["last_name"],
+            data["pesel"]
+        )
+        account.balance = data["balance"]
+        account.history = data["history"]
+        return account
+
     def is_loan_allowed(self, amount):
         if amount <= 0:
             return False
