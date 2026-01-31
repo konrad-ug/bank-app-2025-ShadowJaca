@@ -16,6 +16,9 @@ class CompanyAccount(Account):
         else:
             self.nip = "Invalid"
 
+    def _get_email_history_prefix(self):
+        return "Company account "
+
     def validate_nip_mf(self, nip):
         mf_url = os.getenv("BANK_APP_MF_URL", "https://wl-test.mf.gov.pl/")
         today = date.today().strftime("%Y-%m-%d")

@@ -11,6 +11,9 @@ class PersonalAccount(Account):
         if self.is_promo_code_valid(promo_code) and self.is_born_after_1960(pesel):
             self.balance += 50
 
+    def _get_email_history_prefix(self):
+        return "Personal account "
+
     def is_pesel_valid(self, pesel):
 
         if not pesel:
